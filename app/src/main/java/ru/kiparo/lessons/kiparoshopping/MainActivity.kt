@@ -6,8 +6,12 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import ru.kiparo.lessons.kiparoshopping.register.RegisterScreen
+import ru.kiparo.lessons.kiparoshopping.register.RegisterViewModel
 import ru.kiparo.lessons.kiparoshopping.ui.theme.KiparoShoppingTheme
 
 class MainActivity : ComponentActivity() {
@@ -20,7 +24,19 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                 ) {
-                    RegisterScreen()
+                    val viewModel: RegisterViewModel = viewModel()
+                    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+                    RegisterScreen(
+                        uiState = uiState,
+                        onNameChange = viewModel::onNameChange,       // :: означает сравнение сигнатуры, в данном случае сигнатура ОДИНАКОВА в обеих случаях (value=name:String)
+                        onEmailChange = viewModel::onEmailChange,
+                        onMobileChange = viewModel::onMobileChange,
+                        onPasswordChange = viewModel::onPasswordChange,
+                        onPasswordConfirmChange = viewModel::onPasswordConfirmChange,
+                        onReferalChange = viewModel::onReferalChange,
+                        onSubmit = viewModel::onSubmit
+
+                    )
                 }
             }
         }
